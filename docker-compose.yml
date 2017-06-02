@@ -2,25 +2,42 @@ version: '2'
 
 services:
   collectd:
-    image: fr3nd/collectd
+    image: chimeradev/collectd:5.5.0-3
     privileged: true
     network_mode: host
     volumes:
+      - /etc/hostname:/mnt/hostname:ro
       - /proc:/mnt/proc:ro
+      - /var/run/docker.sock:/var/run/docker.sock
       - ./collectd.conf:/etc/collectd/collectd.conf
   influxdb:
-    image: influxdb:1.0
+    image: influxdb:1.1-alpine
     ports:
-      - "8083:8083"
-      - "8086:8086"
-      - "25826:25826/udp"
+      - "127.0.0.1:25826:25826/udp"
+    expose:
+      - "8083"
+      - "8086"
     volumes:
-      - /var/lib/influxdb
+      - /srv/docker-state/monitoring/rootfs/var/lib/influxdb:/var/lib/influxdb
       - ./influxdb.conf:/etc/influxdb/influxdb.conf
       - ./types.db:/usr/share/collectd/types.db:ro
+    networks:
+      - backend
   grafana:
-    image: grafana/grafana:3.1.1
-    ports:
-      - "3000:3000"
+    image: grafana/grafana:4.3.2
+    expose:
+      - "3000"
     volumes:
-      - /var/lib/grafana
+      - /srv/docker-state/monitoring/var/lib/grafana:/var/lib/grafana
+    env_file:
+      - frontend.env
+    networks:
+      - backend
+      - frontend
+
+networks:
+  frontend:
+    external:
+      name: nginx_default
+  backend:
+    driver: bridge
