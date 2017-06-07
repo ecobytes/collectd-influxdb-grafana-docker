@@ -10,6 +10,8 @@ services:
       - /proc:/mnt/proc:ro
       - /var/run/docker.sock:/var/run/docker.sock
       - ./collectd.conf:/etc/collectd/collectd.conf
+    dns: 172.17.0.1
+    dns_search: weave.local
   influxdb:
     image: influxdb:1.1-alpine
     hostname: influx.weave.local
