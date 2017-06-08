@@ -1,7 +1,7 @@
 version: '2'
 
 services:
-  collectd:
+  collectd_client:
     image: chimeradev/collectd:5.5.0-3
     privileged: true
     network_mode: host
@@ -9,9 +9,19 @@ services:
       - /etc/hostname:/mnt/hostname:ro
       - /proc:/mnt/proc:ro
       - /var/run/docker.sock:/var/run/docker.sock
-      - ./collectd.conf:/etc/collectd/collectd.conf
+      - ./collectd-client.conf:/etc/collectd/collectd.conf
+  collectd_server:
+    image: chimeradev/collectd:5.5.0-3
+    hostname: matrix.weave.local
+    expose:
+      - "25826/udp"
+    volumes:
+      - ./collectd-server.conf:/etc/collectd/collectd.conf
     dns: 172.17.0.1
     dns_search: weave.local
+    networks:
+      - backend
+      - weave
   influxdb:
     image: influxdb:1.1-alpine
     hostname: influx.weave.local
