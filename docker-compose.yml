@@ -17,14 +17,13 @@ services:
       - "127.0.0.1:25826:25826/udp"
 #      - "10.14.10.10:25826:25826/udp"
     expose:
+      - "25826/udp"
       - "8083"
       - "8086"
     volumes:
       - /srv/docker-state/monitoring/rootfs/var/lib/influxdb:/var/lib/influxdb
       - ./influxdb.conf:/etc/influxdb/influxdb.conf
       - ./types.db:/usr/share/collectd/types.db:ro
-    environment:
-      WEAVE_CIDR: 10.14.10.10/24
     dns: 172.17.0.1
     dns_search: weave.local
     networks:
