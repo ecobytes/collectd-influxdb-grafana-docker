@@ -10,6 +10,7 @@ services:
       - /proc:/mnt/proc:ro
       - /var/run/docker.sock:/var/run/docker.sock
       - ./collectd-client.conf:/etc/collectd/collectd.conf
+    restart: always
   collectd_server:
     image: chimeradev/collectd:5.5.0-3
     hostname: matrix.weave.local
@@ -22,36 +23,7 @@ services:
     networks:
       - backend
       - weave
-  influxdb:
-    image: influxdb:1.1-alpine
-    hostname: influx.weave.local
-    ports:
-      - "127.0.0.1:25826:25826/udp"
-#      - "10.14.10.10:25826:25826/udp"
-    expose:
-      - "25826/udp"
-      - "8083"
-      - "8086"
-    volumes:
-      - /srv/docker-state/monitoring/rootfs/var/lib/influxdb:/var/lib/influxdb
-      - ./influxdb.conf:/etc/influxdb/influxdb.conf
-      - ./types.db:/usr/share/collectd/types.db:ro
-    dns: 172.17.0.1
-    dns_search: weave.local
-    networks:
-      - backend
-      - weave
-  grafana:
-    image: grafana/grafana:4.3.2
-    expose:
-      - "3000"
-    volumes:
-      - /srv/docker-state/monitoring/var/lib/grafana:/var/lib/grafana
-    env_file:
-      - frontend.env
-    networks:
-      - backend
-      - frontend
+    restart: always
 
 networks:
   frontend:
