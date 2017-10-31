@@ -1,7 +1,7 @@
 version: '2'
 
 services:
-  collectd_client:
+  collectd-client:
     image: chimeradev/collectd:5.5.0-3
     privileged: true
     network_mode: host
@@ -11,7 +11,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./collectd-client.conf:/etc/collectd/collectd.conf
     restart: always
-  collectd_server:
+  collectd-server:
     image: chimeradev/collectd:5.5.0-3
     hostname: matrix.weave.local
     expose:
