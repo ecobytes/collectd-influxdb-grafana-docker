@@ -26,9 +26,6 @@ services:
     restart: always
 
 networks:
-  frontend:
-    external:
-      name: nginx_default
   backend:
     driver: bridge
   weave:
