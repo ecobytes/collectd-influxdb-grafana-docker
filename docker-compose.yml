@@ -1,22 +1,20 @@
 version: '2'
 
 services:
-  collectd:
-    image: chimeradev/collectd:5.5.0-3
-    privileged: true
-    network_mode: host
-    volumes:
-      - /etc/hostname:/mnt/hostname:ro
-      - /proc:/mnt/proc:ro
-      - /var/run/docker.sock:/var/run/docker.sock
-      - ./collectd.conf:/etc/collectd/collectd.conf
+        #  collectd:
+#   image: chimeradev/collectd:5.5.0-3
+#   privileged: true
+#   network_mode: host
+#   volumes:
+#     - /etc/hostname:/mnt/hostname:ro
+#     - /proc:/mnt/proc:ro
+#     - /var/run/docker.sock:/var/run/docker.sock
+#     - ./collectd.conf:/etc/collectd/collectd.conf
   influxdb:
     image: influxdb:1.1-alpine
     hostname: influx.weave.local
-    ports:
-      - "127.0.0.1:25826:25826/udp"
-#      - "10.14.10.10:25826:25826/udp"
     expose:
+      - "25825/udp"
       - "25826/udp"
       - "8083"
       - "8086"
@@ -44,7 +42,7 @@ services:
 networks:
   frontend:
     external:
-      name: nginx_default
+      name: frontend-web
   backend:
     driver: bridge
   weave:
